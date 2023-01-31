@@ -17,7 +17,7 @@ func main() {
 // e.POST("/start_record", startRecord)
 func startRecord(c echo.Context) error {
 	camtron.StartStreamToFileConsumer()
-	camtron.StartCam()
+	camtron.StartRecording()
 	return c.String(http.StatusOK, "startRecord")
 }
 
