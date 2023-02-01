@@ -19,3 +19,6 @@ Chiamate:
         - formato nome registrazione: <prefisso comunicato dal client>_<timestamp>.<formato video>  
     - stopRecord
         - risposta nome file generato
+
+--------------
+Electron porta 8080
