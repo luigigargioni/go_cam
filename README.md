@@ -1,24 +1,66 @@
-# go_cam
+# :camera: GO_CAM
 
-Start: go run server.go
+## :dart: Requirements
 
-SO: Windows
+* SO: Windows
 
-Libreria GO: Echo
+* GO Library: [Echo](https://echo.labstack.com/)
 
-Server HTTP
+* HTTP Server
 
-Registrazione senza audio
+* Record without audio
 
-Chiamate:
+* Endpoints:
+  * startRecord
+    * parameter pathname
+    * parameter prefix
+    * parameter video format (default mp4)
+    * registration name: ```<client-prefix>_<timestamp>.<video-format>```
+  * stopRecord
+    * respond with generated name
 
-    - startRecord
-        - parametro pathname cartella dove salvare file
-        - parametro stringa prefisso
-        - (eventuale) parametro formato video (default mp4)
-        - formato nome registrazione: <prefisso comunicato dal client>_<timestamp>.<formato video>  
-    - stopRecord
-        - risposta nome file generato
+---
 
---------------
-Electron porta 8080
+## :wrench: Start dev-server
+
+```bash
+go run server.go
+```
+
+For Hot Reload:
+
+```bash
+air
+```
+
+---
+
+## :hammer: Implementation
+
+### :one: [Camtron](https://github.com/vee2xx/camtron)
+
+* Electron port: ```8080```
+
+* Endpoints
+  * start_record_camtron
+  * stop_record_camtron
+
+### :two: [GoCV](https://github.com/hybridgroup/gocv)
+
+* [Installation video](https://www.youtube.com/watch?v=c2HbPpEFYIA)
+
+* [mingw-w64 problems](https://stackoverflow.com/questions/46455927/mingw-w64-installer-the-file-has-been-downloaded-incorrectly)
+
+* Endpoints
+  * start_record_gocv
+  * stop_record_gocv
+
+### :three: Linux
+
+Libraries:
+
+* [Linux Video API V4L2](https://medium.com/learning-the-go-programming-language/realtime-video-capture-with-go-65a8ac3a57da)
+
+* [go-webcam](https://github.com/blackjack/webcam) (base on V4L2)
+
+* [go4vl](https://medium.com/go4vl/building-a-webcam-with-go-and-go4vl-7b56d2c54e39)
