@@ -11,13 +11,15 @@
 * Record without audio
 
 * Endpoints:
-  * startRecord
-    * parameter pathname
-    * parameter prefix
-    * parameter video format (default mp4)
+  * startRecord GET
+    * parameter ```device``` (default 0)
+    * parameter ```path``` (default "")
+    * parameter ```prefix``` (default "")
+    * parameter ```format``` (default "mp4")
     * registration name: ```<client-prefix>_<timestamp>.<video-format>```
-  * stopRecord
     * respond with generated name
+  * stopRecord GET
+    * parameter ```device``` (default 0)
 
 ---
 

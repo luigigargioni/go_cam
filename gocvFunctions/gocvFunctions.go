@@ -30,15 +30,9 @@ func GocvStartRecord(c echo.Context) error {
 			format = "." + format
 		}
 	}
-	codec := "mp4v"
-	switch format {
-	case ".mp4":
-		codec = "mp4v"
-	case ".avi":
-		codec = "XVID"
-	}
+	codec := GetCodec(format)
 
-	fileName := "videos/" + prefix + time.Now().Format("20060102150405") + format
+	fileName := prefix + time.Now().Format("20060102150405") + format
 
 	path := ""
 	if c.QueryParam("path") != "" {
@@ -53,28 +47,38 @@ func GocvStartRecord(c echo.Context) error {
 		fmt.Printf("Error opening video capture device: %v\n", device)
 		return c.String(http.StatusInternalServerError, "Error opening video capture device: "+device)
 	}
-	defer webcam.Close()
 
 	img := gocv.NewMat()
-	defer img.Close()
 
 	if ok := webcam.Read(&img); !ok {
 		fmt.Printf("Cannot read device %v\n", device)
 		return c.String(http.StatusInternalServerError, "Cannot read device: "+device)
 	}
 
-	writer, err := gocv.VideoWriterFile(path+fileName, codec, 25, img.Cols(), img.Rows(), true)
+	FPS := 25.0
+	WIDTH := img.Cols()
+	HEIGHT := img.Rows()
+	IS_COLOR := true
+	writer, err := gocv.VideoWriterFile(path+fileName, codec, FPS, WIDTH, HEIGHT, IS_COLOR)
 	if err != nil {
 		fmt.Printf("Error opening video writer device: %v\n", fileName)
 		return c.String(http.StatusInternalServerError, "Error opening video writer device: "+fileName)
 	}
-	defer writer.Close()
 
-	for /* i := 0; i < 999999; i++ */ {
+	// Start recording in a new goroutine
+	go StartRecording(webcam, writer, img, device, fileName, FPS)
+
+	return c.String(http.StatusOK, "GocvStartRecord success\nFilename: "+fileName)
+}
+
+func StartRecording(webcam *gocv.VideoCapture, writer *gocv.VideoWriter, img gocv.Mat, device string, fileName string, fps float64) {
+	defer img.Close()
+	defer writer.Close()
+	MAX_SECONDS := 300 // 5 minutes
+	for i := 0; i < MAX_SECONDS*int(fps); i++ {
 		if ok := webcam.Read(&img); !ok {
 			fmt.Printf("Device closed: %v\n", device)
-			// return c.String(http.StatusInternalServerError, "Device closed: "+device)
-			return c.String(http.StatusOK, fileName)
+			return
 		}
 		if img.Empty() {
 			continue
@@ -82,8 +86,6 @@ func GocvStartRecord(c echo.Context) error {
 
 		writer.Write(img)
 	}
-
-	return c.String(http.StatusOK, "GocvStartRecord success")
 }
 
 func GocvStopRecord(c echo.Context) error {
@@ -102,4 +104,19 @@ func GocvStopRecord(c echo.Context) error {
 	defer webcam.Close()
 
 	return c.String(http.StatusOK, "GocvStopRecord success")
+}
+
+func GetCodec(format string) string {
+	codec := ""
+	switch format {
+	case ".mp4":
+		codec = "mp4v"
+	case ".avi":
+		codec = "XVID"
+	// Add more formats here
+	default:
+		codec = "mp4v"
+	}
+
+	return codec
 }
