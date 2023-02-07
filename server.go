@@ -1,7 +1,6 @@
 package main
 
 import (
-	"go_cam/camtronFunctions"
 	"go_cam/gocvFunctions"
 	"net/http"
 
@@ -14,13 +13,9 @@ func main() {
 	e := echo.New()
 	e.GET("/", TestPath)
 
-	// Camtron
-	e.GET("/start_record_camtron", camtronFunctions.CamtronStartRecord)
-	e.GET("/stop_record_camtron", camtronFunctions.CamtronStopRecord)
-
 	// GoCV
-	e.GET("/start_record_gocv", gocvFunctions.GocvStartRecord)
-	e.GET("/stop_record_gocv", gocvFunctions.GocvStopRecord)
+	e.GET("/start_record", gocvFunctions.GocvStartRecord)
+	e.GET("/stop_record", gocvFunctions.GocvStopRecord)
 
 	e.Logger.Fatal(e.Start(PORT))
 }
