@@ -64,3 +64,9 @@ Libraries:
 * [go-webcam](https://github.com/blackjack/webcam) (base on V4L2)
 
 * [go4vl](https://medium.com/go4vl/building-a-webcam-with-go-and-go4vl-7b56d2c54e39)
+
+### :four: Frontend
+
+* [Plain Javascript](https://web.dev/media-recording-video/)
+
+* [vue-web-cam](https://www.npmjs.com/package/vue-web-cam)
