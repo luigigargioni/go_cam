@@ -29,7 +29,7 @@
 go run server.go
 ```
 
-For Hot Reload:
+For Hot Reload ([Air](https://github.com/cosmtrek/air)):
 
 ```bash
 air
